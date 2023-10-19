@@ -1,6 +1,7 @@
 /// <reference path="./global.d.ts" />
 //
 // @ts-check
+const PIZZA_PRICES = {'Margherita': 7, 'Caprese': 9, 'Formaggio': 10, 'ExtraSauce': 1, 'ExtraToppings': 2};
 
 /**
  * Determine the prize of the pizza given the pizza and optional extras
@@ -11,7 +12,15 @@
  * @returns {number} the price of the pizza
  */
 export function pizzaPrice(pizza, ...extras) {
-  throw new Error('Please implement the pizzaPrice function');
+  const determinePrice = ([extra, ...remaining]) => {
+    if (!extra) return 0;
+
+    // @ts-ignore
+    return PIZZA_PRICES[extra] + determinePrice(remaining);
+  };
+
+  // @ts-ignore
+  return PIZZA_PRICES[pizza] + determinePrice(extras);
 }
 
 /**
@@ -21,5 +30,7 @@ export function pizzaPrice(pizza, ...extras) {
  * @returns {number} the price of the total order
  */
 export function orderPrice(pizzaOrders) {
-  throw new Error('Please implement the orderPrice function');
+  return pizzaOrders.reduce((total, {pizza, extras}) => (
+    total + pizzaPrice(pizza, ...extras)
+  ), 0);
 }
